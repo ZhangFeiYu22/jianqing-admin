@@ -9,7 +9,7 @@ import {
 } from '@/utils/auth'
 
 const token = getToken();
-const url = `${process.env.BASE_API}attachment/attachment/uploadfile`;
+const url = `${process.env.BASE_API}/upload`;
 const config = {
   // 请求头
   headers: {
@@ -25,6 +25,7 @@ export default {
     axios.post(url, imgData, config)
       .then(response => {
         if (response.data.code === 0) {
+          console.log(response)
           boxData.splice(0, 1, response.data.data.filepath);
           Message.success('上传成功');
         } else {
@@ -36,7 +37,7 @@ export default {
   getPicDataArray(file, boxData) {
     let imgData = new FormData();
     imgData.append("file", file);
-    imgData.append("access_token", token);
+    // imgData.append("access_token", token);
     axios.post(url, imgData, config)
       .then(response => {
         if (response.data.code === 0) {

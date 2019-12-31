@@ -46,6 +46,23 @@ const router = new Router({
         component: _import('home/Home')
       }]
     },
+    // 文章管理
+    {
+      path: '/articleManage',
+      meta: {
+        title: '文章管理'
+      },
+      redirect: '/articleManage/articleManage',
+      component: Layout,
+      children: [{
+        path: 'articleManage',
+        name: 'articleManage',
+        meta: {
+          title: '文章管理'
+        },
+        component: _import('articleManage/ArticleManage')
+      }]
+    },
     // 公司简介
     {
       path: '/companyProfile',
@@ -135,20 +152,20 @@ const router = new Router({
 })
 
 // 全局前置守卫
-// router.beforeEach((to, from, next) => {
-//   if (getToken()) {
-//     if (/login/.test(to.path)) {
-//       next('/');
-//     } else {
-//       next();
-//     }
-//   } else {
-//     if (/login/.test(to.path)) {
-//       next();
-//     } else {
-//       next('/login/signin');
-//     }
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (getToken()) {
+    if (/login/.test(to.path)) {
+      next('/');
+    } else {
+      next();
+    }
+  } else {
+    if (/login/.test(to.path)) {
+      next();
+    } else {
+      next('/login/signin');
+    }
+  }
+});
 
 export default router

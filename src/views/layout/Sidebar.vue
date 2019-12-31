@@ -36,6 +36,12 @@ export default {
           lists: [{ name: "首页管理", path: "home" }]
         },
         {
+          title: "文章管理",
+          icon: "iconfont el-icon-shujufenxi",
+          path: "/articleManage",
+          lists: [{ name: "文章管理", path: "articleManage" }]
+        },
+        {
           title: "公司简介",
           icon: "iconfont el-icon-shujufenxi",
           path: "/companyProfile",

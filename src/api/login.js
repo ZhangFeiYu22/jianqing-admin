@@ -3,11 +3,19 @@ import request from '@/utils/request'
 //登录
 export function loginBy(data) {
     return request({
-        url: '/member/admin/login',
+        url: '/login',
         method: 'post',
         data
     })
 }
+
+export function test() {
+    return request({
+        url: '/backend/cases',
+        method: 'get'
+    })
+}
+
 /*******  临时写的 解决报错(不可用) *******/
 export function getCodeForPassword(data) {
     return request({

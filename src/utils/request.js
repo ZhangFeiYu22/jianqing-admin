@@ -6,8 +6,6 @@ import router from '../router/index';
 import {
   getToken,
   removeToken,
-  getSite,
-  removeSite,
 } from '@/utils/auth'
 
 // 实例化 axios
@@ -16,23 +14,22 @@ const service = axios.create({
   timeout: 5000,
   headers: {
     'content-type': 'application/json'
+    // 'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
   }
 })
 
 // 请求拦截器
 service.interceptors.request.use(config => {
-  var xtoken = getToken();
-  var siteID = '1';
+  if (getToken()) {
+    config.headers['Authorization'] = `Bearer ${getToken()}` // 让每个请求携带自定义 token 请根据实际情况自行修改
+  }
+  config.headers['Authorization'] = 'Bearer gWR3e4iPvvKEf1oKWKhZBDE2pShVriYjAd8xOaxgRnWoezowlKcBYmw5o4Hn'
   if (config.method == 'post') {
     config.data = {
-      access_token: xtoken,
-      site_id: siteID,
       ...config.data
     }
   } else if (config.method == 'get') {
     config.params = {
-      access_token: xtoken,
-      site_id: siteID,
       ...config.params
     }
   }
@@ -47,7 +44,6 @@ service.interceptors.response.use(res => {
     Message('登录已无效，请重新登录');
     setTimeout(() => {
       removeToken();
-      removeSite();
       router.push('/login/signin');
     }, 1500);
   } else {

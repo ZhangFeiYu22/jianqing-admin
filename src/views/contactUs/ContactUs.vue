@@ -1,6 +1,57 @@
 <template>
   <div class="container">
-    <h5>联系我们  待开发</h5>
+    <h5 class="titleH5">联系我们:</h5>
+    <el-form ref="form" :model="form" label-width="80px">
+      <el-form-item label="地址">
+        <el-col :span="11">
+          <el-input v-model="form.address"></el-input>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="电话">
+        <el-col :span="11">
+          <el-input v-model="form.phone"></el-input>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="时间">
+        <el-col :span="5">
+          <el-time-select
+            placeholder="起始时间"
+            v-model="form.startTime"
+            :picker-options="{
+      start: '08:30',
+      step: '00:15',
+      end: '18:30'
+    }"
+          ></el-time-select>
+        </el-col>
+        <el-col class="line" :span="1">-</el-col>
+        <el-col :span="5">
+          <el-time-select
+            placeholder="结束时间"
+            v-model="form.endTime"
+            :picker-options="{
+      start: '08:30',
+      step: '00:15',
+      end: '18:30',
+      minTime: form.startTime
+    }"
+          ></el-time-select>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="轮播图片">
+        <div>
+          <div class="imgBoxList">
+            <div class="plus">
+              <p>+</p>
+              <input type="file" />
+            </div>
+          </div>
+        </div>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">确认</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -8,21 +59,73 @@
 export default {
   data() {
     return {
-     
+      form: {
+        address: "",
+        phone: "",
+        startTime: "",
+        endTime: ""
+      }
     };
   },
-  created() {
-  },
+  created() {},
   methods: {
-    
+    onSubmit() {
+      this.$confirm("是否确认保存？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "保存成功!"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消保存"
+          });
+        });
+    }
   }
 };
 </script>
 
-<style scoped>
-.searchBox {
-  padding: 20px 20px 0;
+<style lang="less" scoped>
+.titleH5 {
+  padding: 10px 20px;
   margin-bottom: 20px;
-  background-color: #f2f2f2;
+  background-color: #f1f1f1;
+  font-size: 18px;
+}
+.imgBoxList {
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ccc;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+  .plus {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    p {
+      font-size: 30px;
+      height: 98px;
+      line-height: 98px;
+      width: 98px;
+      text-align: center;
+      color: #999;
+      position: absolute;
+    }
+    input {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      opacity: 0;
+    }
+  }
 }
 </style>
