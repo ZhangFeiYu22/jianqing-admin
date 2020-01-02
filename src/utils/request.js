@@ -23,7 +23,7 @@ service.interceptors.request.use(config => {
   if (getToken()) {
     config.headers['Authorization'] = `Bearer ${getToken()}` // 让每个请求携带自定义 token 请根据实际情况自行修改
   }
-  config.headers['Authorization'] = 'Bearer gWR3e4iPvvKEf1oKWKhZBDE2pShVriYjAd8xOaxgRnWoezowlKcBYmw5o4Hn'
+  // config.headers['Authorization'] = 'Bearer YgJqsw4uQRMm9Zqw6dl2Yhf0BlbGHEshaIy44bvrBbnLcNYIlyFtslChESEw'
   if (config.method == 'post') {
     config.data = {
       ...config.data

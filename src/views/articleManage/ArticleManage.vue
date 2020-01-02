@@ -26,6 +26,9 @@
         </el-form-item>
         <el-form-item label="文章头图" :label-width="formLabelWidth">
           <div>
+            <div class="imgBox">
+              <img src="../../assets/images/login.jpg" alt />
+            </div>
             <div class="imgBoxList">
               <div class="plus">
                 <p>+</p>
@@ -154,10 +157,22 @@ export default {
     }
   }
 }
+.imgBox {
+  margin-right: 10px;
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .imgBoxList {
   width: 100px;
   height: 100px;
   border: 1px solid #ccc;
+  display: inline-block;
   img {
     width: 100%;
     height: 100%;

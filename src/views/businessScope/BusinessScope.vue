@@ -25,9 +25,9 @@
           <el-input v-model="businessForm.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="业务图片" :label-width="formLabelWidth">
-          <!-- <div class="businessImg">
-            <img src="../../assets/images/icon-img.png" alt="">
-          </div>-->
+          <div class="imgBox">
+            <img src="../../assets/images/login.jpg" alt />
+          </div>
           <div class="businessImg">
             <div class="plus">
               <p>+</p>
@@ -110,10 +110,21 @@ export default {
 .btnBox {
   margin: 0 0 20px 0;
 }
+.imgBox {
+  margin-right: 10px;
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
 .businessImg {
   width: 100px;
   height: 100px;
   border: 1px solid #ccc;
+  display: inline-block;
   img {
     width: 100%;
     height: 100%;

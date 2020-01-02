@@ -65,9 +65,9 @@ export default {
     };
   },
   created () {
-    test().then(res=>{
-      console.log('22--',res)
-    })
+    // test().then(res=>{
+    //   console.log('22--',res)
+    // })
   },
   methods: {
     login() {
