@@ -13,8 +13,19 @@
         </el-col>
       </el-form-item>
       <el-form-item label="轮播图片">
-        <div>
-          <div class="imgBoxList">
+        <div class="imgShowList">
+          <div class="imgList">
+            <div class="imgBox">
+              <img src="../../assets/images/logo.jpg" alt />
+            </div>
+            <div class="imgBox">
+              <img src="../../assets/images/logoName.png" alt />
+            </div>
+            <div class="imgBox">
+              <img src="../../assets/images/logoName.png" alt />
+            </div>
+          </div>
+          <div class="imgUpload">
             <div class="plus">
               <p>+</p>
               <input type="file" />
@@ -73,32 +84,48 @@ export default {
   background-color: #f1f1f1;
   font-size: 18px;
 }
-.imgBoxList {
-  width: 100px;
-  height: 100px;
-  border: 1px solid #ccc;
-  img {
-    width: 100%;
-    height: 100%;
-  }
-  .plus {
-    width: 100px;
-    height: 100px;
-    position: relative;
-    p {
-      font-size: 30px;
-      height: 98px;
-      line-height: 98px;
-      width: 98px;
-      text-align: center;
-      color: #999;
-      position: absolute;
-    }
-    input {
+.imgShowList {
+  .imgList {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+    .imgBox {
+      margin-right: 10px;
       width: 100px;
       height: 100px;
-      position: absolute;
-      opacity: 0;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .imgUpload {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    .plus {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      p {
+        font-size: 30px;
+        height: 98px;
+        line-height: 98px;
+        width: 98px;
+        text-align: center;
+        color: #999;
+        position: absolute;
+      }
+      input {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        opacity: 0;
+      }
     }
   }
 }

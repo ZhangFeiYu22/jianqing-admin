@@ -152,20 +152,20 @@ const router = new Router({
 })
 
 // 全局前置守卫
-router.beforeEach((to, from, next) => {
-  if (getToken()) {
-    if (/login/.test(to.path)) {
-      next('/');
-    } else {
-      next();
-    }
-  } else {
-    if (/login/.test(to.path)) {
-      next();
-    } else {
-      next('/login/signin');
-    }
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (getToken()) {
+//     if (/login/.test(to.path)) {
+//       next('/');
+//     } else {
+//       next();
+//     }
+//   } else {
+//     if (/login/.test(to.path)) {
+//       next();
+//     } else {
+//       next('/login/signin');
+//     }
+//   }
+// });
 
 export default router
