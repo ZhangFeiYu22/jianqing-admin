@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import {
-  getToken
-} from '@/utils/auth'
+
 import Layout from '@/views/layout/Layout'
 Vue.use(Router)
 const _import = require('./_import_' + process.env.NODE_ENV);
@@ -152,20 +150,20 @@ const router = new Router({
 })
 
 // 全局前置守卫
-// router.beforeEach((to, from, next) => {
-//   if (getToken()) {
-//     if (/login/.test(to.path)) {
-//       next('/');
-//     } else {
-//       next();
-//     }
-//   } else {
-//     if (/login/.test(to.path)) {
-//       next();
-//     } else {
-//       next('/login/signin');
-//     }
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (localStorage.getItem('Authorization')) {
+    if (/login/.test(to.path)) {
+      next('/');
+    } else {
+      next();
+    }
+  } else {
+    if (/login/.test(to.path)) {
+      next();
+    } else {
+      next('/login/signin');
+    }
+  }
+});
 
 export default router

@@ -4,16 +4,13 @@ import axios from "axios";
 import {
   Message
 } from 'element-ui'
-import {
-  getToken
-} from '@/utils/auth'
 
-const token = getToken();
-const url = `${process.env.BASE_API}/upload`;
+const url = `${process.env.BASE_API}/api/upload`;
 const config = {
   // 请求头
   headers: {
-    "Content-Type": "multipart/form-data"
+    "Content-Type": "multipart/form-data",
+    "Authorization": localStorage.getItem('Authorization') 
   }
 };
 export default {
@@ -21,13 +18,12 @@ export default {
   getPicData(file, boxData) {
     let imgData = new FormData();
     imgData.append("file", file);
-    imgData.append("access_token", token);
     axios.post(url, imgData, config)
       .then(response => {
-        if (response.data.code === 0) {
-          console.log(response)
-          boxData.splice(0, 1, response.data.data.filepath);
+          if (response.status == 200) {
+          boxData.splice(0, 1, response.data.file_path);
           Message.success('上传成功');
+          console.log(boxData)
         } else {
           Message('上传失败');
         }
@@ -37,11 +33,10 @@ export default {
   getPicDataArray(file, boxData) {
     let imgData = new FormData();
     imgData.append("file", file);
-    // imgData.append("access_token", token);
     axios.post(url, imgData, config)
       .then(response => {
-        if (response.data.code === 0) {
-          boxData.push(response.data.data.filepath);
+        if (response.status == 200) {
+          boxData.push(response.data.file_path);
           Message.success('上传成功');
         } else {
           Message('上传失败');
@@ -52,7 +47,6 @@ export default {
   picMaterial(file, self, callBack) {
     let imgData = new FormData();
     imgData.append("file", file);
-    imgData.append("access_token", token);
     axios.post(url, imgData, config)
       .then(response => {
         if (response.data.code === 0) {
@@ -67,7 +61,6 @@ export default {
   async upload(file) {
     let formData = new FormData();
     formData.append("file", file);
-    formData.append("access_token", token);
     let res = await axios.post(url, formData, config);
     return new Promise((resolve, reject) => {
       if (res.data.code === 0) {

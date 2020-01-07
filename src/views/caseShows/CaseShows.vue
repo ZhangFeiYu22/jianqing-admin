@@ -32,13 +32,17 @@
           </el-select>
         </el-form-item>
         <el-form-item label="案例图片" :label-width="formLabelWidth">
-          <div class="imgBox">
-            <img src="../../assets/images/login.jpg" alt />
-          </div>
-          <div class="businessImg">
-            <div class="plus">
-              <p>+</p>
-              <input type="file" />
+          <div class="imgShowList">
+            <div class="imgList" v-if="caseForm.picture.length!==0">
+              <div class="imgBox" v-for="(item,index) in caseForm.picture" :key="index">
+                <img :src="item" alt />
+              </div>
+            </div>
+            <div class="imgUpload">
+              <div class="plus">
+                <p>+</p>
+                <input type="file" @change="getImage" />
+              </div>
             </div>
           </div>
         </el-form-item>
@@ -55,32 +59,11 @@
 export default {
   data() {
     return {
-      tableData: [
-        {
-          name: "王小虎",
-          isShow: 1,
-          imgurl: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          name: "王小虎",
-          isShow: 1,
-          imgurl: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          name: "王小虎",
-          isShow: 0,
-          imgurl: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          name: "王小虎",
-          isShow: 1,
-          imgurl: "上海市普陀区金沙江路 1518 弄"
-        }
-      ],
+      tableData: [],
       dialogFormVisible: false,
       caseForm: {
         name: "",
-        url: ""
+        picture: []
       },
       formLabelWidth: "120px"
     };
@@ -115,6 +98,9 @@ export default {
     },
     isShowFormatter(row, column, cellValue) {
       return row.isShow == 0 ? "否" : "是";
+    },
+    getImage(e) {
+      imgUpload.getPicData(e.target.files[0], this.caseForm.picture);
     }
   }
 };
@@ -134,33 +120,48 @@ export default {
     height: 100%;
   }
 }
-.businessImg {
-  width: 100px;
-  height: 100px;
-  border: 1px solid #ccc;
-  display: inline-block;
-  img {
-    width: 100%;
-    height: 100%;
-  }
-  .plus {
-    width: 100px;
-    height: 100px;
-    position: relative;
-    p {
-      font-size: 30px;
-      height: 98px;
-      line-height: 98px;
-      width: 98px;
-      text-align: center;
-      color: #999;
-      position: absolute;
-    }
-    input {
+.imgShowList {
+  .imgList {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+    .imgBox {
+      margin-right: 10px;
       width: 100px;
       height: 100px;
-      position: absolute;
-      opacity: 0;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .imgUpload {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    .plus {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      p {
+        font-size: 30px;
+        height: 98px;
+        line-height: 98px;
+        width: 98px;
+        text-align: center;
+        color: #999;
+        position: absolute;
+      }
+      input {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        opacity: 0;
+      }
     }
   }
 }

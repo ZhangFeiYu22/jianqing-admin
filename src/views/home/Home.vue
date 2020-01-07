@@ -4,31 +4,25 @@
     <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="简介标题">
         <el-col :span="11">
-          <el-input v-model="form.address"></el-input>
+          <el-input v-model="form.subTitle"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item label="简介内容">
         <el-col :span="11">
-          <el-input type="textarea" v-model="form.phone"></el-input>
+          <el-input type="textarea" v-model="form.content"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item label="轮播图片">
         <div class="imgShowList">
-          <div class="imgList">
-            <div class="imgBox">
-              <img src="../../assets/images/logo.jpg" alt />
-            </div>
-            <div class="imgBox">
-              <img src="../../assets/images/logoName.png" alt />
-            </div>
-            <div class="imgBox">
-              <img src="../../assets/images/logoName.png" alt />
+          <div class="imgList" v-if="form.picture.length!==0">
+            <div class="imgBox" v-for="(item,index) in form.picture" :key="index">
+              <img :src="item" alt />
             </div>
           </div>
           <div class="imgUpload">
             <div class="plus">
               <p>+</p>
-              <input type="file" />
+              <input type="file" @change="getImage" />
             </div>
           </div>
         </div>
@@ -41,29 +35,48 @@
 </template>
 
 <script>
+import axios from "axios";
+import { homeSee, homeSave } from "@/api/apis";
+import imgUpload from "../../utils/common";
 export default {
   data() {
     return {
       form: {
-        address: "",
-        phone: "",
-        startTime: "",
-        endTime: ""
+        subTitle: "",
+        content: "",
+        picture: []
       }
     };
   },
-  created() {},
+  created() {
+    this.fetchHomeData();
+  },
   methods: {
+    fetchHomeData(){
+      homeSee().then(res=>{
+        console.log(res);
+      })
+    },
     onSubmit() {
+      console.log(this.form);
       this.$confirm("是否确认保存？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "保存成功!"
+          homeSave().then(res => {
+            if (res.status) {
+              this.$message({
+                type: "success",
+                message: "保存成功!"
+              });
+            }else{
+              this.$message({
+                type: "info",
+                message: "操作失败，请检查重新操作"
+              });
+            }
           });
         })
         .catch(() => {
@@ -72,6 +85,9 @@ export default {
             message: "已取消保存"
           });
         });
+    },
+    getImage(e) {
+      imgUpload.getPicDataArray(e.target.files[0], this.form.picture);
     }
   }
 };

@@ -154,7 +154,6 @@
 <script>
 /* eslint-disable */
 import axios from "axios";
-import { getToken } from "@/utils/auth";
 import "../../static/neditor/neditor.config.js";
 import "../../static/neditor/neditor.all.js";
 import "../../static/neditor/i18n/zh-cn/zh-cn.js";
@@ -167,11 +166,12 @@ export default {
   data() {
     return {
       id: Math.random(10) + "ueditorId",
-      token: getToken(),
-      url: `${process.env.BASE_API}attachment/attachment/uploadfile`,
-      config: {
+      // token: localStorage.getItem('api_token'),
+      url: `${process.env.BASE_API}/api/upload`,
+      configs: {
         headers: {
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
+          "Authorization": localStorage.getItem('Authorization') 
         }
       },
       filepath: [],
@@ -223,6 +223,11 @@ export default {
         initialFrameHeight: 400
       }
     };
+  },
+  watch: {
+    content: function (val, oldVal) {
+      this.editor.setContent(val); 
+    }
   },
   created() {
     // if (window.addEventListener) {
@@ -329,11 +334,11 @@ export default {
       if (/jpeg|jpg|gif|png$/.test(e.target.files[0].type)) {
         this.warnText = "支持绝大多数图片格式，单张图片最大支持3MB";
         let formData = new FormData();
-        let xtoken = getToken();
-        formData.append("access_token", xtoken);
         formData.append("file", e.target.files[0]);
-        axios.post(this.url, formData, this.config).then(res => {
-          this.filepath.push(process.env.BASE_API + res.data.data.filepath);
+        console.log('999---',this.configs)
+        axios.post(this.url, formData, this.configs).then(res => {
+          // this.filepath.push(process.env.BASE_API + res.data.data.filepath);
+          this.filepath.push(res.data.file_path);
         });
         this.$refs.fileImage.value = null;
       } else {
@@ -373,7 +378,7 @@ export default {
         this.loading = true;
         let formData = new FormData();
         formData.append("file", e.target.files[0]);
-        axios.post(this.url, formData, this.config).then(res => {
+        axios.post(this.url, formData, this.configs).then(res => {
           this.videopath.push(process.env.BASE_API + res.data.data.filepath);
           this.warnInfo = "视频上传完成";
           this.loading = false;

@@ -16,7 +16,7 @@
         <el-col :span="5">
           <el-time-select
             placeholder="起始时间"
-            v-model="form.startTime"
+            v-model="form.time"
             :picker-options="{
       start: '08:30',
       step: '00:15',
@@ -28,7 +28,7 @@
         <el-col :span="5">
           <el-time-select
             placeholder="结束时间"
-            v-model="form.endTime"
+            v-model="form.time"
             :picker-options="{
       start: '08:30',
       step: '00:15',
@@ -40,21 +40,15 @@
       </el-form-item>
       <el-form-item label="轮播图片">
         <div class="imgShowList">
-          <div class="imgList">
-            <div class="imgBox">
-              <img src="../../assets/images/logo.jpg" alt />
-            </div>
-            <div class="imgBox">
-              <img src="../../assets/images/logoName.png" alt />
-            </div>
-            <div class="imgBox">
-              <img src="../../assets/images/logoName.png" alt />
+          <div class="imgList" v-if="form.file_path.length!==0">
+            <div class="imgBox" v-for="(item,index) in form.file_path" :key="index">
+              <img :src="item" alt />
             </div>
           </div>
           <div class="imgUpload">
             <div class="plus">
               <p>+</p>
-              <input type="file" />
+              <input type="file" @change="getImage" />
             </div>
           </div>
         </div>
@@ -67,29 +61,46 @@
 </template>
 
 <script>
+import { postContacUs, getContacUs } from "../../api/apis";
+import imgUpload from "../../utils/common";
 export default {
   data() {
     return {
       form: {
         address: "",
         phone: "",
-        startTime: "",
-        endTime: ""
+        time: "",
+        file_path: []
       }
     };
   },
-  created() {},
+  created() {
+    this.fetchContacUs();
+  },
   methods: {
+    fetchContacUs() {
+      getContacUs().then(res => {
+        console.log(res);
+      });
+    },
+    getImage(e) {
+      imgUpload.getPicDataArray(e.target.files[0], this.form.file_path);
+    },
     onSubmit() {
+      console.log(this.form);
       this.$confirm("是否确认保存？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "保存成功!"
+          postContacUs(this.form).then(res => {
+            if (res.status == 200) {
+              this.$message({
+                type: "success",
+                message: "保存成功!"
+              });
+            }
           });
         })
         .catch(() => {

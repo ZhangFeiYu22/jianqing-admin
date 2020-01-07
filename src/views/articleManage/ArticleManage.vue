@@ -11,7 +11,8 @@
     <el-table border :data="articleList" style="width: 100%">
       <el-table-column type="index" width="50"></el-table-column>
       <el-table-column prop="title" label="文章标题" width="180"></el-table-column>
-      <el-table-column prop="time" label="创建时间"></el-table-column>
+      <el-table-column prop="created_at" label="创建时间"></el-table-column>
+      <el-table-column prop="updated_at" label="更新时间"></el-table-column>
       <el-table-column fixed="right" label="操作" width="180">
         <template slot-scope="scope">
           <el-button @click="editArticle(scope.row)" type="primary" plain size="small">编辑</el-button>
@@ -26,8 +27,8 @@
         </el-form-item>
         <el-form-item label="文章头图" :label-width="formLabelWidth">
           <div>
-            <div class="imgBox">
-              <img src="../../assets/images/login.jpg" alt />
+            <div class="imgBox" v-if="headImg.length!==0">
+              <img :src="this.headImg[0]" alt />
             </div>
             <div class="imgBoxList">
               <div class="plus">
@@ -38,12 +39,13 @@
           </div>
         </el-form-item>
         <el-form-item label="文章内容" :label-width="formLabelWidth">
-          <myeditor @getContent="fetchContent" :content="articleList.content"></myeditor>
+          <myeditor @getContent="fetchContent" :content="editorContent"></myeditor>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="saveArticle" v-if="post_put == 'post'">添加保存</el-button>
+        <el-button type="primary" @click="putArticle(putId)" v-else>修改保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -51,23 +53,25 @@
 
 <script>
 import myeditor from "@/components/myeditor.vue";
+import {
+  getArticleList,
+  saveArticle,
+  putArticle,
+  delArticle
+} from "../../api/apis";
 import imgUpload from "../../utils/common";
-import { getArticleList } from "../../api/apis";
 export default {
   components: {
     myeditor
   },
   data() {
     return {
-      articleList: [
-        {
-          title: "王小虎",
-          time: "2019-12-12",
-          content: ""
-        }
-      ],
+      articleList: [],
       dialogFormVisible: false,
-      imgOneList: [],
+      headImg: [],
+      post_put: "post",
+      putId: "", //修改ID
+      editorContent: "",
       articleForm: {
         title: "",
         file_path: "",
@@ -82,26 +86,44 @@ export default {
   methods: {
     fetchArticleList() {
       getArticleList().then(res => {
-        console.log(res);
+        if (res.status == 200) {
+          this.articleList = res.data.data;
+        }
       });
     },
     addArticle() {
       this.dialogFormVisible = true;
+      this.articleForm = {};
+      this.headImg = [];
+      this.post_put = "post";
+      this.editorContent = "  ";
     },
     editArticle(row) {
       this.dialogFormVisible = true;
-      console.log(row);
+      this.post_put = "put";
+      this.putId = row.id;
+      this.articleForm.title = row.title;
+      // this.articleForm.file_path = row.file_path,
+      this.headImg.splice(0, 1, row.file_path);
+      this.articleForm.content = row.content;
+      this.editorContent = row.content;
     },
-    delArticle() {
+    delArticle(row) {
       this.$confirm("此操作将永久删除该条信息, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+          delArticle(row.id).then(res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.fetchArticleList();
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+            }
           });
         })
         .catch(() => {
@@ -113,12 +135,63 @@ export default {
     },
     // 富文本编辑器
     fetchContent(content) {
-      this.articleList.content = content;
+      this.articleForm.content = content;
     },
     addImg(e) {
-      // 通过DOM取文件数据
-      console.log(event);
-      imgUpload.getPicData(e.target.files[0], this.imgOneList);
+      imgUpload.getPicData(e.target.files[0], this.headImg);
+    },
+    saveArticle() {
+      this.articleForm.file_path = this.headImg[0];
+      this.$confirm("确定添加保存吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          saveArticle(this.articleForm).then(res => {
+            if (res.status == 200) {
+              this.dialogFormVisible = false;
+              this.fetchArticleList();
+              this.$message({
+                type: "success",
+                message: "保存成功!"
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消保存"
+          });
+        });
+    },
+    putArticle() {
+      this.articleForm.file_path = this.headImg[0];
+      console.log(this.articleForm);
+      this.$confirm("确定修改保存吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          putArticle(this.articleForm, this.putId).then(res => {
+            if (res.status == 200) {
+              this.dialogFormVisible = false;
+              this.fetchArticleList();
+              this.$message({
+                type: "success",
+                message: "保存成功!"
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消保存"
+          });
+        });
     }
   }
 };

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 //登录
 export function loginBy(data) {
     return request({
-        url: '/login',
+        url: '/user_login',
         method: 'post',
         data
     })

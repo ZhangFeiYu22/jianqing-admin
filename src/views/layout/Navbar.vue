@@ -8,13 +8,11 @@
 </template>
 
 <script>
-import { removeToken } from "@/utils/auth";
 export default {
   methods: {
     signOut() {
-      removeToken();
+      localStorage.removeItem('Authorization');
       this.$router.push("/login/signin");
-      sessionStorage.removeItem("num", this.num); // 清除本地存储的二级路由信息
     }
   }
 };

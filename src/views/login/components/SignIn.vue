@@ -11,8 +11,8 @@
       <el-form-item>
         <el-button type="primary" round @click="login" style="width: 100%;">登 录</el-button>
       </el-form-item>
-    </el-form> -->
-     <el-form :model="form" :rules="rules" ref="form" status-icon>
+    </el-form>-->
+    <el-form :model="form" :rules="rules" ref="form" status-icon>
       <el-form-item prop="email">
         <el-input v-model="form.email" type="text" placeholder="请输入用户名" clearable></el-input>
       </el-form-item>
@@ -27,9 +27,8 @@
 </template>
 
 <script>
-import { loginBy, test } from "@/api/login";
-import { setToken, setsite_child_id } from "@/utils/auth";
-
+import { loginBy } from "@/api/apis";
+import { mapMutations } from 'vuex';
 export default {
   data() {
     var checkMobile = (rule, value, callback) => {
@@ -44,7 +43,7 @@ export default {
     var checkEmail = (rule, value, callback) => {
       if (!value) {
         callback(new Error("用户名不能为空"));
-      }  else {
+      } else {
         callback();
       }
     };
@@ -64,29 +63,25 @@ export default {
       }
     };
   },
-  created () {
-    // test().then(res=>{
-    //   console.log('22--',res)
-    // })
-  },
   methods: {
+    ...mapMutations(['changeLogin']),
     login() {
-      this.$refs["form"].validate(valid => {
+      var _this = this;
+      _this.$refs["form"].validate(valid => {
         if (valid) {
-          console.log(this.form)
-          loginBy(this.form).then(res => {
-            console.log(res)
-            // if (res.data.code == 0) {
-            //   setToken(res.data.data.access_token);
-            //   setsite_child_id(res.data.data.site_child_id);
-            //   this.$message.success({
-            //     message: res.data.message,
-            //     duration: 1000
-            //   });
-            //   this.$router.push("/");
-            // } else {
-            //   this.$message.error(res.data.message);
-            // }
+          loginBy(_this.form).then(res => {
+            if (res.status == 200) {
+              localStorage.setItem('api_token',res.data.api_token)
+              _this.userToken = 'Bearer ' + res.data.api_token;
+              _this.changeLogin({ Authorization: _this.userToken });
+              _this.$message.success({
+                message: res.data.message,
+                duration: 1000
+              });
+              _this.$router.push({ path: "/" });
+            } else {
+              _this.$message.error('用户名或密码错误，请重新输入');
+            }
           });
         } else {
           return false;
