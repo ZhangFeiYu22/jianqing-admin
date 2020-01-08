@@ -28,7 +28,7 @@
 
 <script>
 import { loginBy } from "@/api/apis";
-import { mapMutations } from 'vuex';
+import { mapMutations } from "vuex";
 export default {
   data() {
     var checkMobile = (rule, value, callback) => {
@@ -64,23 +64,30 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['changeLogin']),
+    ...mapMutations(["changeLogin"]),
     login() {
       var _this = this;
       _this.$refs["form"].validate(valid => {
         if (valid) {
           loginBy(_this.form).then(res => {
             if (res.status == 200) {
-              localStorage.setItem('api_token',res.data.api_token)
-              _this.userToken = 'Bearer ' + res.data.api_token;
-              _this.changeLogin({ Authorization: _this.userToken });
-              _this.$message.success({
-                message: res.data.message,
-                duration: 1000
-              });
-              _this.$router.push({ path: "/" });
+              if (res.data.code == 422) {
+                _this.$message.info({
+                  message: res.data.message,
+                  duration: 1000
+                });
+              } else {
+                localStorage.setItem("api_token", res.data.api_token);
+                _this.userToken = "Bearer " + res.data.api_token;
+                _this.changeLogin({ Authorization: _this.userToken });
+                _this.$message.success({
+                  message: res.data.message,
+                  duration: 1000
+                });
+                _this.$router.push({ path: "/home" });
+              }
             } else {
-              _this.$message.error('用户名或密码错误，请重新输入');
+              _this.$message.error("用户名或密码错误，请重新输入");
             }
           });
         } else {

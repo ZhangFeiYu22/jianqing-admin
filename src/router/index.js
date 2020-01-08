@@ -8,6 +8,7 @@ const _import = require('./_import_' + process.env.NODE_ENV);
 const router = new Router({
   routes: [{
       path: '/',
+      name: 'home',
       redirect: '/home/home',
     },
     {
@@ -21,11 +22,10 @@ const router = new Router({
       component: _import('login/Login'),
       redirect: '/login/signin',
       children: [{
-          path: 'signin',
-          name: 'signin',
-          component: _import('login/components/SignIn')
-        }
-      ]
+        path: 'signin',
+        name: 'signin',
+        component: _import('login/components/SignIn')
+      }]
     },
     // 首页
     {
@@ -151,7 +151,8 @@ const router = new Router({
 
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('Authorization')) {
+  console.log(localStorage.getItem('Authorization'))
+  if (localStorage.getItem('Authorization') != null && localStorage.getItem('Authorization').indexOf('undefined') == -1) {
     if (/login/.test(to.path)) {
       next('/');
     } else {

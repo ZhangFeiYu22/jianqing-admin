@@ -167,7 +167,7 @@ export default {
     return {
       id: Math.random(10) + "ueditorId",
       // token: localStorage.getItem('api_token'),
-      url: `${process.env.BASE_API}/api/upload`,
+      url: `${process.env.BASE_API}/backend/upload`,
       configs: {
         headers: {
           "Content-Type": "multipart/form-data",

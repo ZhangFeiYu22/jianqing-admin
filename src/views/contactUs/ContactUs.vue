@@ -16,7 +16,7 @@
         <el-col :span="5">
           <el-time-select
             placeholder="起始时间"
-            v-model="form.time"
+            v-model="form.start"
             :picker-options="{
       start: '08:30',
       step: '00:15',
@@ -28,7 +28,7 @@
         <el-col :span="5">
           <el-time-select
             placeholder="结束时间"
-            v-model="form.time"
+            v-model="form.end"
             :picker-options="{
       start: '08:30',
       step: '00:15',
@@ -43,6 +43,7 @@
           <div class="imgList" v-if="form.file_path.length!==0">
             <div class="imgBox" v-for="(item,index) in form.file_path" :key="index">
               <img :src="item" alt />
+              <i @click="delImg(index)" class="delImgIcon">x</i>
             </div>
           </div>
           <div class="imgUpload">
@@ -69,7 +70,8 @@ export default {
       form: {
         address: "",
         phone: "",
-        time: "",
+        start: "",
+        end: "",
         file_path: []
       }
     };
@@ -81,10 +83,19 @@ export default {
     fetchContacUs() {
       getContacUs().then(res => {
         console.log(res);
+        if(res.status == 200){
+          if(res.data.length !== 0 || res.data !== ''){
+            this.form = res.data
+          }
+        }
       });
     },
     getImage(e) {
       imgUpload.getPicDataArray(e.target.files[0], this.form.file_path);
+    },
+    delImg(index){
+      console.log(index)
+      this.form.file_path.splice(index, 1);
     },
     onSubmit() {
       console.log(this.form);
@@ -130,9 +141,25 @@ export default {
       margin-right: 10px;
       width: 100px;
       height: 100px;
+      position: relative;
       img {
         width: 100%;
         height: 100%;
+      }
+      .delImgIcon{
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        line-height: 13px;
+        text-align: center;
+        display: block;
+        border: 1px solid #f00;
+        border-radius: 50%;
+        font-style: normal;
+        right: 0px;
+        top: 0px;
+        color: #f00;
+        cursor: pointer;
       }
     }
   }

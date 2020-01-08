@@ -56,6 +56,23 @@ export function delArticle(id) {
     })
 }
 
+// 公司简介   查看 
+export function getIntroduction() {
+    return request({
+        url: `/backend/introduction`,
+        method: 'get'
+    })
+}
+// 公司简介   修改
+export function postIntroduction(data) {
+    return request({
+        url: `/backend/introduction`,
+        method: 'post',
+        data
+    })
+}
+
+
 // 业务范围  列表
 export function getBusiness() {
     return request({
@@ -87,6 +104,38 @@ export function delBusiness(id) {
     })
 }
 
+// 案例展示  列表
+export function getCase() {
+    return request({
+        url: `/backend/cases`,
+        method: 'get'
+    })
+}
+// 案例展示  添加
+export function saveCase(data) {
+    return request({
+        url: '/backend/cases',
+        method: 'post',
+        data
+    })
+}
+// 案例展示  修改
+export function putCase(data,id) {
+    return request({
+        url: `/backend/cases/${id}`,
+        method: 'put',
+        data
+    })
+}
+// 案例展示  删除
+export function delCase(id) {
+    return request({
+        url: `/backend/cases/${id}`,
+        method: 'delete'
+    })
+}
+
+
 //联系我们   增加
 export function postContacUs(data) {
     return request({
@@ -100,5 +149,37 @@ export function getContacUs() {
     return request({
         url: `/backend/company`,
         method: 'get'
+    })
+}
+
+
+// 用户管理  列表
+export function getUser() {
+    return request({
+        url: `/backend/user`,
+        method: 'get'
+    })
+}
+// 用户管理  添加
+export function saveUser(data) {
+    return request({
+        url: '/backend/user',
+        method: 'post',
+        data
+    })
+}
+// 用户管理  修改
+export function putUser(data,id) {
+    return request({
+        url: `/backend/user/${id}`,
+        method: 'put',
+        data
+    })
+}
+// 用户管理  删除
+export function delUser(id) {
+    return request({
+        url: `/backend/user/${id}`,
+        method: 'delete'
     })
 }

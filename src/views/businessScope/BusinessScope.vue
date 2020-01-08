@@ -30,8 +30,8 @@
         </el-form-item>
         <el-form-item label="业务图片" :label-width="formLabelWidth">
           <div class="imgBox" v-if="headImg.length!==0">
-              <img :src="this.headImg[0]" alt />
-            </div>
+            <img :src="this.headImg[0]" alt />
+          </div>
           <div class="businessImg">
             <div class="plus">
               <p>+</p>
@@ -43,7 +43,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="saveBusiness" v-if="post_put == 'post'">添加保存</el-button>
-        <el-button type="primary" @click="putBusiness(putId)" v-else>修改保存</el-button>
+        <el-button type="primary" @click="putBusiness" v-else>修改保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -62,7 +62,7 @@ export default {
     return {
       headImg: [],
       post_put: "post",
-      putId: '',
+      putId: "",
       businessList: [],
       dialogFormVisible: false,
       businessForm: {
@@ -104,7 +104,6 @@ export default {
       })
         .then(() => {
           delBusiness(row.id).then(res => {
-            console.log(res);
             if (res.status == 200) {
               this.fetchBusiness();
               this.$message({
@@ -165,7 +164,7 @@ export default {
               this.fetchBusiness();
               this.$message({
                 type: "success",
-                message: "保存成功!"
+                message: "修改成功!"
               });
             }
           });
